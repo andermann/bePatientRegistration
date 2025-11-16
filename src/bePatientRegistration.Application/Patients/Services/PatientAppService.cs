@@ -43,7 +43,8 @@ namespace bePatientRegistration.Application.Patients.ServicesImpl
             if (!string.IsNullOrWhiteSpace(request.Cpf))
             {
                 var normalizedCpf = Cpf.Normalize(request.Cpf);
-                if (await _patientRepository.ExistsByCpfAsync(normalizedCpf, cancellationToken))
+                bool existsCpf = await _patientRepository.ExistsByCpfAsync(normalizedCpf, cancellationToken);
+                if (existsCpf)
                     throw new DomainException("Já existe um paciente cadastrado com este CPF.");
             }
 

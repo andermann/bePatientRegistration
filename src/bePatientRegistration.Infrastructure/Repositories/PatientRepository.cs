@@ -56,9 +56,8 @@ namespace bePatientRegistration.Infrastructure.Repositories
 
         public async Task<bool> ExistsByCpfAsync(string cpf, CancellationToken cancellationToken = default)
         {
-            // CPF é owned type; comparar pela coluna "Cpf"
             return await _context.Patients
-                .AnyAsync(p => EF.Property<string?>(p, "Cpf") == cpf, cancellationToken);
+                .AnyAsync(p => p.Cpf != null && p.Cpf.Value == cpf, cancellationToken);
         }
 
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
