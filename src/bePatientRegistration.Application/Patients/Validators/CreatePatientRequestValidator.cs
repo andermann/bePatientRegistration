@@ -27,9 +27,14 @@ namespace bePatientRegistration.Application.Patients.Validators
             RuleFor(x => x.Gender)
                 .IsInEnum().WithMessage("Sexo inválido.");
 
+            //RuleFor(x => x.Cpf)
+            //    .Must(cpf => string.IsNullOrWhiteSpace(cpf) || cpf!.Length == 11)
+            //    .WithMessage("CPF deve ter 11 dígitos numéricos.");
+
             RuleFor(x => x.Cpf)
-                .Must(cpf => string.IsNullOrWhiteSpace(cpf) || cpf!.Length == 11)
+                .Must(cpf => string.IsNullOrWhiteSpace(cpf) || System.Text.RegularExpressions.Regex.IsMatch(cpf!, @"^\d{11}$"))
                 .WithMessage("CPF deve ter 11 dígitos numéricos.");
+
 
             RuleFor(x => x.Rg)
                 .NotEmpty().WithMessage("RG é obrigatório.")
@@ -40,13 +45,31 @@ namespace bePatientRegistration.Application.Patients.Validators
                 .EmailAddress().WithMessage("E-mail inválido.")
                 .MaximumLength(200);
 
-            RuleFor(x => x.MobilePhone)
-                .NotEmpty().WithMessage("Celular é obrigatório.")
-                .Matches(@"^\d{10,11}$").WithMessage("Celular deve conter DDD + número (10 ou 11 dígitos).");
+            //RuleFor(x => x.MobilePhone)
+            //    .NotEmpty().WithMessage("Celular é obrigatório.")
+            //    .Matches(@"^\d{10,11}$").WithMessage("Celular deve conter DDD + número (10 ou 11 dígitos).");
 
+            //RuleFor(x => x.LandlinePhone)
+            //    .Must(p => string.IsNullOrWhiteSpace(p) || System.Text.RegularExpressions.Regex.IsMatch(p, @"^\d{10,11}$"))
+            //    .WithMessage("Telefone fixo deve conter DDD + número (10 ou 11 dígitos).");
+
+            // Pelo menos um telefone preenchido
+            RuleFor(x => x)
+                .Must(x =>
+                    !string.IsNullOrWhiteSpace(x.MobilePhone) ||
+                    !string.IsNullOrWhiteSpace(x.LandlinePhone))
+                .WithMessage("Informe pelo menos um telefone (celular ou fixo).");
+
+            // Se informar celular, valida formato
+            RuleFor(x => x.MobilePhone)
+                .Must(p => string.IsNullOrWhiteSpace(p) || System.Text.RegularExpressions.Regex.IsMatch(p, @"^\d{10,11}$"))
+                .WithMessage("Celular deve conter DDD + número (10 ou 11 dígitos).");
+
+            // Se informar fixo, valida formato
             RuleFor(x => x.LandlinePhone)
                 .Must(p => string.IsNullOrWhiteSpace(p) || System.Text.RegularExpressions.Regex.IsMatch(p, @"^\d{10,11}$"))
                 .WithMessage("Telefone fixo deve conter DDD + número (10 ou 11 dígitos).");
+
 
             RuleFor(x => x.HealthPlanId)
                 .NotEmpty().WithMessage("Convênio é obrigatório.");

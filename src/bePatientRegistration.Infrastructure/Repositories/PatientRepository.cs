@@ -60,6 +60,7 @@ namespace bePatientRegistration.Infrastructure.Repositories
                 .AnyAsync(p => p.Cpf != null && p.Cpf.Value == cpf, cancellationToken);
         }
 
+
         public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await _context.SaveChangesAsync(cancellationToken);

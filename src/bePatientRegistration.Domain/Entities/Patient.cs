@@ -90,6 +90,8 @@ namespace bePatientRegistration.Domain.Entities
 
             SetCardExpiration(healthPlanCardExpirationMonth, healthPlanCardExpirationYear);
 
+            ValidatePhones(mobilePhone, landlinePhone);
+
             IsActive = true;
             CreatedAt = DateTime.UtcNow;
         }
@@ -130,6 +132,15 @@ namespace bePatientRegistration.Domain.Entities
             HealthPlanCardExpirationMonth = month;
             HealthPlanCardExpirationYear = year;
         }
+
+        public static void ValidatePhones(string? mobilePhone, string? landlinePhone)
+        {
+            if (string.IsNullOrWhiteSpace(mobilePhone) && string.IsNullOrWhiteSpace(landlinePhone))
+            {
+                throw new DomainException("Informe pelo menos um telefone (celular ou fixo).");
+            }
+        }
+
 
         public void Update(
             string firstName,
