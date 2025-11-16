@@ -1,5 +1,6 @@
 ﻿using bePatientRegistration.Domain.Exceptions;
 using bePatientRegistration.Domain.ValueObjects;
+using System.Threading;
 
 namespace bePatientRegistration.Domain.Entities
 {
@@ -51,6 +52,14 @@ namespace bePatientRegistration.Domain.Entities
             int healthPlanCardExpirationYear)
         {
             Id = Guid.NewGuid();
+
+            //// regra simples: não permitir CPF duplicado
+            //if (!string.IsNullOrWhiteSpace(cpf))
+            //{
+            //    var normalizedCpf = cpf.Normalize(cpf);
+            //    if (ExistsByCpfAsync(normalizedCpf))
+            //        throw new DomainException("Já existe um paciente cadastrado com este CPF.");
+            //}
 
             SetName(firstName, lastName);
             SetDateOfBirth(dateOfBirth);
