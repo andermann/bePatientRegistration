@@ -1,0 +1,185 @@
+<div class="container mt-4" [formGroup]="form">
+  <h2 class="mb-3">
+    {{ editingId ? 'Editar paciente' : 'Novo paciente' }}
+  </h2>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <form (ngSubmit)="submit()">
+
+    <!-- Dados pessoais -->
+    <div class="card mb-3">
+      <div class="card-header">
+        Dados pessoais
+      </div>
+      <div class="card-body row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-control" formControlName="firstName">
+          <div class="text-danger mt-1" *ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid">
+            <small *ngIf="form.get('firstName')?.hasError('required')">Nome é obrigatório.</small>
+            <small *ngIf="form.get('firstName')?.hasError('minlength')">Nome deve ter pelo menos 3 caracteres.</small>
+            <small *ngIf="form.get('firstName')?.hasError('maxlength')">Nome não pode ultrapassar 100 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Sobrenome</label>
+          <input type="text" class="form-control" formControlName="lastName">
+          <div class="text-danger mt-1" *ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid">
+            <small *ngIf="form.get('lastName')?.hasError('required')">Sobrenome é obrigatório.</small>
+            <small *ngIf="form.get('lastName')?.hasError('minlength')">Sobrenome deve ter pelo menos 3 caracteres.</small>
+            <small *ngIf="form.get('lastName')?.hasError('maxlength')">Sobrenome não pode ultrapassar 100 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Data de nascimento</label>
+          <input type="date" class="form-control" formControlName="dateOfBirth">
+          <div class="text-danger mt-1" *ngIf="form.get('dateOfBirth')?.touched && form.get('dateOfBirth')?.invalid">
+            <small *ngIf="form.get('dateOfBirth')?.hasError('required')">Data de nascimento é obrigatória.</small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Sexo</label>
+          <select class="form-select" formControlName="gender">
+            <option [ngValue]="1">Masculino</option>
+            <option [ngValue]="2">Feminino</option>
+            <option [ngValue]="3">Outro</option>
+          </select>
+          <div class="text-danger mt-1" *ngIf="form.get('gender')?.touched && form.get('gender')?.invalid">
+            <small>Sexo é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">CPF</label>
+          <input type="text" class="form-control" formControlName="cpf" maxlength="11">
+          <div class="text-danger mt-1" *ngIf="form.get('cpf')?.touched && form.get('cpf')?.invalid">
+            <small *ngIf="form.get('cpf')?.hasError('pattern') || form.get('cpf')?.hasError('must')">
+              CPF deve ter 11 dígitos numéricos.
+            </small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">RG</label>
+          <input type="text" class="form-control" formControlName="rg">
+          <div class="text-danger mt-1" *ngIf="form.get('rg')?.touched && form.get('rg')?.invalid">
+            <small *ngIf="form.get('rg')?.hasError('required')">RG é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">UF do RG</label>
+          <select class="form-select" formControlName="ufRg">
+            <option value="">Selecione...</option>
+            <option [ngValue]="1">AC</option>
+            <option [ngValue]="2">AL</option>
+            <!-- coloca todos os estados de acordo com o enum -->
+          </select>
+          <div class="text-danger mt-1" *ngIf="form.get('ufRg')?.touched && form.get('ufRg')?.invalid">
+            <small>UF do RG é obrigatória.</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Contato -->
+    <div class="card mb-3">
+      <div class="card-header">
+        Contato
+      </div>
+      <div class="card-body row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label">E-mail</label>
+          <input type="email" class="form-control" formControlName="email">
+          <div class="text-danger mt-1" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+            <small *ngIf="form.get('email')?.hasError('required')">E-mail é obrigatório.</small>
+            <small *ngIf="form.get('email')?.hasError('email')">E-mail inválido.</small>
+            <small *ngIf="form.get('email')?.hasError('maxlength')">E-mail não pode ultrapassar 200 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Celular</label>
+          <input type="text" class="form-control" formControlName="mobilePhone">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Telefone fixo</label>
+          <input type="text" class="form-control" formControlName="landlinePhone">
+        </div>
+
+        <div class="col-12">
+          <div class="text-danger mt-1" *ngIf="(form.get('mobilePhone')?.touched || form.get('landlinePhone')?.touched)">
+            <small>Informe pelo menos um telefone (celular ou fixo).</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Convênio -->
+    <div class="card mb-3">
+      <div class="card-header">
+        Convênio
+      </div>
+      <div class="card-body row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label">Convênio</label>
+          <select class="form-select" formControlName="healthPlanId">
+            <option value="">Selecione...</option>
+            <option *ngFor="let h of healthPlans" [ngValue]="h.id">{{ h.name }}</option>
+          </select>
+          <div class="text-danger mt-1" *ngIf="form.get('healthPlanId')?.touched && form.get('healthPlanId')?.invalid">
+            <small>Convênio é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Número da carteirinha</label>
+          <input type="text" class="form-control" formControlName="healthPlanCardNumber">
+          <div class="text-danger mt-1" *ngIf="form.get('healthPlanCardNumber')?.touched && form.get('healthPlanCardNumber')?.invalid">
+            <small *ngIf="form.get('healthPlanCardNumber')?.hasError('required')">Número da carteirinha é obrigatório.</small>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Validade (mês)</label>
+          <input type="number" class="form-control" formControlName="healthPlanCardExpirationMonth" min="1" max="12">
+          <div class="text-danger mt-1" *ngIf="form.get('healthPlanCardExpirationMonth')?.touched && form.get('healthPlanCardExpirationMonth')?.invalid">
+            <small>Mês deve estar entre 1 e 12.</small>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Validade (ano)</label>
+          <input type="number" class="form-control" formControlName="healthPlanCardExpirationYear">
+          <div class="text-danger mt-1" *ngIf="form.get('healthPlanCardExpirationYear')?.touched && form.get('healthPlanCardExpirationYear')?.invalid">
+            <small>Ano de validade é obrigatório.</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <div class="d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" routerLink="/patients">
+        Voltar
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="saving">
+        {{ saving ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+
+  </form>
+</div>
