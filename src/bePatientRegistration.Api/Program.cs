@@ -5,11 +5,19 @@ using bePatientRegistration.Infrastructure.Persistence;
 using bePatientRegistration.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using bePatientRegistration.Application.Patients.Dtos;
+using bePatientRegistration.Application.Patients.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1) Controllers
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreatePatientRequestValidator>();
+
 
 // 2) Swagger
 builder.Services.AddEndpointsApiExplorer();
