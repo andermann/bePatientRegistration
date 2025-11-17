@@ -12,6 +12,22 @@ using bePatientRegistration.Application.Patients.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS para o Angular
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+// ... resto dos services (AddControllers, AddDbContext, etc)
+
+
+
 // 1) Controllers
 builder.Services.AddControllers();
 
@@ -46,6 +62,19 @@ builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IHealthPlanRepository, HealthPlanRepository>();
 
 var app = builder.Build();
+
+// se tiver app.UseHttpsRedirection(); deixe ele
+app.UseHttpsRedirection();
+
+// habilita CORS ANTES do MapControllers
+app.UseCors("AllowAngular");
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
 
 // 6) PIPELINE HTTP
 // Deixa o Swagger SEM condicional de ambiente por enquanto,

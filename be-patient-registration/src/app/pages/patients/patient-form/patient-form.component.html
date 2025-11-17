@@ -39,9 +39,18 @@
         <div class="col-md-4">
           <label class="form-label">Data de nascimento</label>
           <input type="date" class="form-control" formControlName="dateOfBirth">
-          <div class="text-danger mt-1" *ngIf="form.get('dateOfBirth')?.touched && form.get('dateOfBirth')?.invalid">
+          <!-- <div class="text-danger mt-1" *ngIf="form.get('dateOfBirth')?.touched && form.get('dateOfBirth')?.invalid">
             <small *ngIf="form.get('dateOfBirth')?.hasError('required')">Data de nascimento é obrigatória.</small>
+          </div> -->
+          <div class="text-danger mt-1" *ngIf="form.get('dateOfBirth')?.touched && form.get('dateOfBirth')?.invalid">
+            <small *ngIf="form.get('dateOfBirth')?.hasError('required')">
+              Data de nascimento é obrigatória.
+            </small>
+            <small *ngIf="form.get('dateOfBirth')?.hasError('futureDate')">
+              Data de nascimento não pode ser futura.
+            </small>
           </div>
+
         </div>
 
         <div class="col-md-4">
@@ -59,11 +68,12 @@
         <div class="col-md-4">
           <label class="form-label">CPF</label>
           <input type="text" class="form-control" formControlName="cpf" maxlength="11">
-          <div class="text-danger mt-1" *ngIf="form.get('cpf')?.touched && form.get('cpf')?.invalid">
+          <!-- <div class="text-danger mt-1" *ngIf="form.get('cpf')?.touched && form.get('cpf')?.invalid">
             <small *ngIf="form.get('cpf')?.hasError('pattern') || form.get('cpf')?.hasError('must')">
               CPF deve ter 11 dígitos numéricos.
             </small>
-          </div>
+          </div> -->
+          
         </div>
 
         <div class="col-md-4">

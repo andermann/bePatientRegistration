@@ -1,11 +1,33 @@
+// // src/app/app.routes.ts
+// import { Routes } from '@angular/router';
+
+// export const routes: Routes = [
+//   {
+//     path: '',
+//     loadChildren: () =>
+//       import('./pages/patients/patients-module').then(m => m.PatientsModule)
+//   },
+//   { path: '**', redirectTo: '' }
+// ];
+
 // src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
     path: '',
-    loadChildren: () =>
-      import('./pages/patients/patients-module').then(m => m.PatientsModule)
+    redirectTo: 'patients',
+    pathMatch: 'full'
   },
-  { path: '**', redirectTo: '' }
+  {
+    path: 'patients',
+    loadChildren: () =>
+      import('./pages/patients/patients-module').then(m => m.PatientsModule),
+  },
+//   {
+//     path: 'health-plans',
+//     loadChildren: () =>
+//       import('./pages/health-plans/health-plans-module').then(m => m.HealthPlansModule),
+//   },
+  { path: '**', redirectTo: 'patients' }
 ];

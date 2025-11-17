@@ -1,9 +1,14 @@
 <div class="container">
   <h2>Pacientes</h2>
 
-  <button class="btn btn-primary mb-3" routerLink="/patients/new">
+  <!-- <button class="btn btn-primary mb-3" routerLink="/patients/new">
+    Novo Paciente
+  </button> -->
+  <button class="btn btn-primary mb-3"
+        [routerLink]="['/patients/new']">
     Novo Paciente
   </button>
+
 
   <div *ngIf="loading">Carregando...</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>

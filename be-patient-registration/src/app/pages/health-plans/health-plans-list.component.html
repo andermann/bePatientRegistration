@@ -1,0 +1,25 @@
+<!-- src/app/pages/health-plans/health-plans-list.component.html -->
+<h2>Convênios</h2>
+
+<div *ngIf="error" class="text-danger mb-2">
+  {{ error }}
+</div>
+
+<table *ngIf="plans.length > 0; else noPlans" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Código</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let plan of plans">
+      <td>{{ plan.name }}</td>
+      <!-- <td>{{ plan.code }}</td> -->
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noPlans>
+  <p>Nenhum convênio cadastrado.</p>
+</ng-template>
