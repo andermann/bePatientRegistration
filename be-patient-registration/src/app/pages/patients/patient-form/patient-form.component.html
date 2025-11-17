@@ -142,17 +142,26 @@
         Convênio
       </div>
       <div class="card-body row g-3">
+		<div class="mb-3">
+		  <label for="healthPlanId" class="form-label">Convênio</label>
+		  <select id="healthPlanId"
+				  class="form-select"
+				  formControlName="healthPlanId">
+			<option [ngValue]="null">Selecione um convênio</option>
+			<option *ngFor="let plan of healthPlans"
+					[ngValue]="plan.id">
+			  {{ plan.name }}
+			</option>
+		  </select>
 
-        <div class="col-md-6">
-          <label class="form-label">Convênio</label>
-          <select class="form-select" formControlName="healthPlanId">
-            <option value="">Selecione...</option>
-            <option *ngFor="let h of healthPlans" [ngValue]="h.id">{{ h.name }}</option>
-          </select>
-          <div class="text-danger mt-1" *ngIf="form.get('healthPlanId')?.touched && form.get('healthPlanId')?.invalid">
-            <small>Convênio é obrigatório.</small>
-          </div>
-        </div>
+		  <div class="text-danger mt-1"
+			   *ngIf="form.get('healthPlanId')?.touched && form.get('healthPlanId')?.invalid">
+			<small *ngIf="form.get('healthPlanId')?.hasError('required')">
+			  Convênio é obrigatório.
+			</small>
+		  </div>
+		</div>
+
 
         <div class="col-md-6">
           <label class="form-label">Número da carteirinha</label>

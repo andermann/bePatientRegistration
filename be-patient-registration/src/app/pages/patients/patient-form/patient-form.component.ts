@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidationErrors
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../../../services/patient.service';
 import { HealthPlanService } from '../../../services/health-plan.service';
 import { HealthPlan } from '../../../models/health-plan.model';
 import { PatientRequest } from '../../../models/patient.model';
+
 
 @Component({
   selector: 'app-patient-form',
@@ -16,10 +22,14 @@ import { PatientRequest } from '../../../models/patient.model';
 export class PatientFormComponent implements OnInit {
 
   form!: FormGroup;
-  healthPlans: HealthPlan[] = [];
+  healthPlans: HealthPlan[] = [];   // ADICIONA ESTA LINHA
+  loading = false;
+  error?: string;
+  isEdit = false;
+  patientId?: string;
   editingId?: string;
   saving = false;
-  error?: string;
+  
 
   constructor(
     private fb: FormBuilder,
@@ -39,29 +49,6 @@ export class PatientFormComponent implements OnInit {
     }
   }
 
-  // buildForm(): void {
-  //   this.form = this.fb.group({
-  //     firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-  //     lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-  //     dateOfBirth: [null, [Validators.required]],
-  //     gender: [1, [Validators.required]],
-
-  //     cpf: [''],
-  //     rg: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-  //     ufRg: ['', [Validators.required]],
-
-  //     email: ['', [Validators.required, Validators.email, Validators.maxLength(200)]],
-  //     mobilePhone: [''],
-  //     landlinePhone: [''],
-
-  //     healthPlanId: [null, [Validators.required]],
-  //     healthPlanCardNumber: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-  //     healthPlanCardExpirationMonth: [null, [Validators.required, Validators.min(1), Validators.max(12)]],
-  //     healthPlanCardExpirationYear: [null, [Validators.required]]
-  //   }, {
-  //     validators: [this.atLeastOnePhoneValidator()]
-  //   });
-  // }
   buildForm(): void {
   this.form = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
@@ -92,33 +79,6 @@ export class PatientFormComponent implements OnInit {
   });
 }
 
-
-
-  // // Regra: precisa ter pelo menos um telefone (celular ou fixo)
-  // atLeastOnePhoneValidator() {
-  //   return (group: FormGroup) => {
-  //     const mobile = group.get('mobilePhone')?.value;
-  //     const landline = group.get('landlinePhone')?.value;
-
-  //     if (!mobile && !landline) {
-  //       const mobileErrors = group.get('mobilePhone')?.errors || {};
-  //       group.get('mobilePhone')?.setErrors({ ...mobileErrors, atLeastOnePhone: true });
-
-  //       const landErrors = group.get('landlinePhone')?.errors || {};
-  //       group.get('landlinePhone')?.setErrors({ ...landErrors, atLeastOnePhone: true });
-  //     } else {
-  //       ['mobilePhone', 'landlinePhone'].forEach(name => {
-  //         const ctrl = group.get(name);
-  //         const errors = ctrl?.errors as { [key: string]: any } | null | undefined;
-  //         if (errors && errors['atLeastOnePhone']) {
-  //           const { ['atLeastOnePhone']: _, ...rest } = errors;
-  //           ctrl!.setErrors(Object.keys(rest).length ? rest : null);
-  //         }
-  //       });
-  //     }
-  //     return null;
-  //   };
-  // }
 
   // Regra: precisa ter pelo menos um telefone (celular ou fixo)
 atLeastOnePhoneValidator() {
@@ -202,14 +162,18 @@ cpfValidator = (control: AbstractControl): ValidationErrors | null => {
 
 
   loadHealthPlans(): void {
-    this.healthPlanService.getAll().subscribe({
-      next: data => this.healthPlans = data.filter(h => h.isActive),
-      error: err => {
-        console.error(err);
-        this.error = 'Erro ao carregar convênios.';
-      }
-    });
-  }
+  this.healthPlanService.getAll().subscribe({
+    next: data => {
+      // se a API tiver campo isActive, filtra só ativos
+      this.healthPlans = data.filter(h => (h as any).isActive !== false);
+    },
+    error: err => {
+      console.error(err);
+      this.error = 'Erro ao carregar convênios.[app-patient-form]';
+    }
+  });
+}
+
 
   submit(): void {
     if (this.form.invalid) {
