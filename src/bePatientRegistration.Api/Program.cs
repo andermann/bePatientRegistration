@@ -63,7 +63,46 @@ builder.Services.AddScoped<IHealthPlanRepository, HealthPlanRepository>();
 
 var app = builder.Build();
 
-// se tiver app.UseHttpsRedirection(); deixe ele
+// // se tiver app.UseHttpsRedirection(); deixe ele
+// app.UseHttpsRedirection();
+
+// // habilita CORS ANTES do MapControllers
+// app.UseCors("AllowAngular");
+
+// app.UseAuthorization();
+
+// app.MapControllers();
+
+// app.Run();
+
+
+// // 6) PIPELINE HTTP
+// // Deixa o Swagger SEM condicional de ambiente por enquanto,
+// // pra facilitar o desenvolvimento.
+// app.UseSwagger();
+// app.UseSwaggerUI(c =>
+// {
+    // c.SwaggerEndpoint("/swagger/v1/swagger.json", "bePatientRegistration API v1");
+    // c.RoutePrefix = "swagger"; // URL: /swagger
+// });
+
+// app.UseHttpsRedirection();
+
+// app.MapControllers();
+
+// app.Run();
+
+
+// 6) PIPELINE HTTP
+
+// Swagger SEM condicional de ambiente, pra facilitar desenvolvimento
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "bePatientRegistration API v1");
+    c.RoutePrefix = "swagger"; // URL: /swagger
+});
+
 app.UseHttpsRedirection();
 
 // habilita CORS ANTES do MapControllers
@@ -75,19 +114,3 @@ app.MapControllers();
 
 app.Run();
 
-
-// 6) PIPELINE HTTP
-// Deixa o Swagger SEM condicional de ambiente por enquanto,
-// pra facilitar o desenvolvimento.
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "bePatientRegistration API v1");
-    c.RoutePrefix = "swagger"; // URL: /swagger
-});
-
-app.UseHttpsRedirection();
-
-app.MapControllers();
-
-app.Run();

@@ -1,49 +1,37 @@
-<div class="container">
-  <h2>Pacientes</h2>
+<h2>Pacientes</h2>
 
-  <!-- <button class="btn btn-primary mb-3" routerLink="/patients/new">
-    Novo Paciente
-  </button> -->
-  <button class="btn btn-primary mb-3"
-        [routerLink]="['/patients/new']">
-    Novo Paciente
-  </button>
+<button class="btn btn-primary mb-3" [routerLink]="['/patients/new']">
+  Novo Paciente
+</button>
 
+<div *ngIf="loading">Carregando...XXX</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <div *ngIf="loading">Carregando...</div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<table *ngIf="patients.length > 0; else noPatients" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>CPF</th>
+      <th>Convênio</th>
+      <th></th>
+    </tr>
+  </thead>
 
-  <table class="table table-striped" *ngIf="patients.length">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>CPF</th>
-        <th>Convênio</th>
-        <th>Ativo</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of patients">
-        <td>{{ p.fullName }}</td>
-        <td>{{ p.cpf || '-' }}</td>
-        <td>{{ p.healthPlanName }}</td>
-        <td>
-          <span [class.text-success]="p.isActive"
-                [class.text-danger]="!p.isActive">
-            {{ p.isActive ? 'Sim' : 'Não' }}
-          </span>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-secondary" [routerLink]="['/patients', p.id]">
-            Editar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <tbody>
+    <tr *ngFor="let p of patients">
+      <td>{{ p.fullName }}</td>
+      <td>{{ p.cpf || '-' }}</td>
+      <td>{{ p.healthPlanName }}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary"
+                [routerLink]="['/patients', p.id]">
+          Editar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-  <div *ngIf="!loading && !patients.length">
-    Nenhum paciente cadastrado.
-  </div>
-</div>
+<ng-template #noPatients>
+  <p>Nenhum paciente cadastrado.</p>
+</ng-template>
