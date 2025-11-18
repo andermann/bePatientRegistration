@@ -1,0 +1,17 @@
+.is-invalid {
+  border: 2px solid #dc3545 !important;
+  background-color: #ffe6e6 !important;
+}
+
+.form-error {
+  font-size: 0.8rem;
+  color: #dc3545;
+}
+
+.alert-warning ul {
+  margin-bottom: 0;
+}
+
+input[title], select[title] {
+  cursor: help;
+}

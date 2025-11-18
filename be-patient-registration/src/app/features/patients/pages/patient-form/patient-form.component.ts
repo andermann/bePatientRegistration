@@ -1,7 +1,7 @@
 // src/app/features/patients/pages/patient-form/patient-form.component.ts
 import { Component, OnInit, inject } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators,AbstractControl,ValidationErrors} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -189,17 +189,12 @@ export class PatientFormComponent implements OnInit {
     this.error = undefined;
     this.loading = true;
 
-    console.log('baseRequest', baseRequest);
-
-
     if (this.isEditMode && this.id) {
       // const request: UpdatePatientRequest = {
       //   ...baseRequest,
       //   isActive: raw.isActive!
       // };
       const request: UpdatePatientRequest = baseRequest;
-
-      console.log('baseRequest', baseRequest);
 
       this.patientsService.update(this.id, request).subscribe({
         next: () => this.router.navigate(['/pacientes']),
@@ -208,7 +203,12 @@ export class PatientFormComponent implements OnInit {
         //   this.error = 'Erro ao salvar paciente.';
         //   this.loading = false;
         // }
-        error: (err) => this.handleApiError(err)
+        error: (err) => {
+          console.error('Erro detalhado da API:', err.error); 
+          this.error = 'Erro ao salvar paciente.';
+          this.error = this.extrairMensagemErro(err);
+          this.handleApiError(err)
+        }
       });
     } else {
       this.patientsService.create(baseRequest).subscribe({
@@ -220,21 +220,26 @@ export class PatientFormComponent implements OnInit {
         //   this.error = this.extrairMensagemErro(err);
         //   this.loading = false;
         // }
-        error: (err) => this.handleApiError(err)
+        error: (err) => {
+          console.error('Erro detalhado da API:', err.error); 
+          this.error = 'Erro ao salvar paciente.';
+          this.error = this.extrairMensagemErro(err);
+          this.handleApiError(err)
+        }
       });
     }
     
   }
 
   private extrairMensagemErro(err: any): string {
-  // Quando a API usa ProblemDetails (padrão .NET)
-  if (err?.error?.title) {
-    return err.error.title;
-  }
+    // Quando a API usa ProblemDetails (padrão .NET)
+    if (err?.error?.title) {
+      return err.error.title;
+    }
 
-  // Quando a API manda um objeto de validação:
-  // { errors: { Campo: [ 'msg1', 'msg2' ] } }
-  if (err?.error?.errors) {
+    // Quando a API manda um objeto de validação:
+    // { errors: { Campo: [ 'msg1', 'msg2' ] } }
+    if (err?.error?.errors) {
       const erros = err.error.errors;
       const mensagens: string[] = [];
       for (const key of Object.keys(erros)) {
@@ -248,78 +253,98 @@ export class PatientFormComponent implements OnInit {
   }
 
   private buildValidationErrors(): void {
-  const messages: string[] = [];
+    const messages: string[] = [];
 
-  const labels: Record<string, string> = {
-    firstName: 'Nome',
-    lastName: 'Sobrenome',
-    dateOfBirth: 'Data de nascimento',
-    gender: 'Gênero',
-    cpf: 'CPF',
-    rg: 'RG',
-    ufRg: 'UF do RG',
-    email: 'E-mail',
-    mobilePhone: 'Celular',
-    landlinePhone: 'Telefone fixo',
-    healthPlanId: 'Convênio',
-    healthPlanCardNumber: 'Nº carteirinha',
-    healthPlanCardExpirationMonth: 'Mês de validade',
-    healthPlanCardExpirationYear: 'Ano de validade',
-    isActive: 'Status'
-  };
+    const labels: Record<string, string> = {
+      firstName: 'Nome',
+      lastName: 'Sobrenome',
+      dateOfBirth: 'Data de nascimento',
+      gender: 'Gênero',
+      cpf: 'CPF',
+      rg: 'RG',
+      ufRg: 'UF do RG',
+      email: 'E-mail',
+      mobilePhone: 'Celular',
+      landlinePhone: 'Telefone fixo',
+      healthPlanId: 'Convênio',
+      healthPlanCardNumber: 'Nº carteirinha',
+      healthPlanCardExpirationMonth: 'Mês de validade',
+      healthPlanCardExpirationYear: 'Ano de validade',
+      isActive: 'Status'
+    };
 
-  Object.entries(this.form.controls).forEach(([key, control]) => {
-    if (control.invalid) {
-      const friendly = labels[key] ?? key;
-      const errors = control.errors ?? {};
+    Object.entries(this.form.controls).forEach(([key, control]) => {
+      if (control.invalid) {
+        const friendly = labels[key] ?? key;
+        const errors = control.errors ?? {};
 
-      if (errors['required']) {
-        messages.push(`${friendly} é obrigatório.`);
+        if (errors['required']) {
+          messages.push(`${friendly} é obrigatório.`);
+        }
+        if (errors['maxlength']) {
+          messages.push(
+            `${friendly} ultrapassa o tamanho máximo (${errors['maxlength'].requiredLength} caracteres).`
+          );
+        }
+        if (errors['email']) {
+          messages.push(`${friendly} não é um e-mail válido.`);
+        }
+        if (errors['min']) {
+          messages.push(
+            `${friendly} não pode ser menor que ${errors['min'].min}.`
+          );
+        }
+        if (errors['max']) {
+          messages.push(
+            `${friendly} não pode ser maior que ${errors['max'].max}.`
+          );
+        }
       }
-      if (errors['maxlength']) {
-        messages.push(
-          `${friendly} ultrapassa o tamanho máximo (${errors['maxlength'].requiredLength} caracteres).`
-        );
-      }
-      if (errors['email']) {
-        messages.push(`${friendly} não é um e-mail válido.`);
-      }
-      if (errors['min']) {
-        messages.push(
-          `${friendly} não pode ser menor que ${errors['min'].min}.`
-        );
-      }
-      if (errors['max']) {
-        messages.push(
-          `${friendly} não pode ser maior que ${errors['max'].max}.`
-        );
-      }
+    });
+
+    // Erros do formulário como um todo (validators de grupo)
+    const formErrors = this.form.errors ?? {};
+    if (formErrors['phoneRequired']) {
+      messages.push(formErrors['phoneRequired']);
     }
-  });
+    if (formErrors['cpf']) {
+      messages.push(formErrors['cpf']);
+    }
 
-  // Erros do formulário como um todo (validators de grupo)
-  const formErrors = this.form.errors ?? {};
-  if (formErrors['phoneRequired']) {
-    messages.push(formErrors['phoneRequired']);
+    this.validationErrors = messages;
   }
-  if (formErrors['cpf']) {
-    messages.push(formErrors['cpf']);
-  }
-
-  this.validationErrors = messages;
-}
 
   private logInvalidControls(): void {
     console.group('Campos inválidos do formulário de paciente');
-    Object.entries(this.form.controls).forEach(([key, control]) => {
-      if (control.invalid) {
-        console.log(key, control.errors);
+    this.validationErrors = [];
+    this.error = undefined;
+    const messages: string[] = [];
+
+    Object.entries(this.form.controls).forEach(([key, value]) => {
+      if (value.invalid) {
+        const textos = Array.isArray(value) ? value as string[] : [String(value)];
+        //const map = fieldMap[key] ?? null;
+        console.log('textos', textos);
+        console.log(key, value.errors);
+        if(key === 'mobilePhone'){
+          messages.push('Preencha o Celular com a quantidade mínima de digitos.');
+        }else{
+          //messages.push(key);
+        }
+
       }
     });
     console.log('Erros do form (nível grupo):', this.form.errors);
     console.groupEnd();
+    
+    if (messages.length) {
+      // Vai aparecer no alerta amarelo "Revise os campos abaixo"
+      this.validationErrors = messages;
+      return;
+    }
   }
 
+  
   private handleApiError(err: any): void {
       console.error('Erro ao salvar paciente', err);
       console.error('Erro detalhado da API:', err?.error);
@@ -328,102 +353,86 @@ export class PatientFormComponent implements OnInit {
       this.validationErrors = [];
       this.error = undefined;
 
-      const problem = err?.error;
+      const problem = err?.error ?? err;
       if (!problem) {
         this.error = 'Erro ao salvar paciente. Tente novamente.';
         return;
       }
 
-      // Caso padrão do .NET: ProblemDetails com "errors"
-      if (problem.errors && typeof problem.errors === 'object') {
-        const msgs: string[] = [];
-
-        for (const key of Object.keys(problem.errors)) {
-          const value = problem.errors[key];
-          if (Array.isArray(value)) {
-            value.forEach((m: string) => msgs.push(m));
-          } else if (typeof value === 'string') {
-            msgs.push(value);
-          }
-
-          // Opcional: associar erro do backend a um campo específico
-          if (key === 'Gender') {
-            this.form.get('gender')?.setErrors({ api: true });
-          }
-          if (key === 'HealthPlanId') {
-            this.form.get('healthPlanId')?.setErrors({ api: true });
-          }
-          // ... se quiser mapear outros campos
+      // Mapa: nome que vem da API  ->  nome do formControl + label amigável
+      const fieldMap: Record<string, { control: string; label: string }> = {
+        FirstName: { control: 'firstName', label: 'Nome' },
+        LastName: { control: 'lastName', label: 'Sobrenome' },
+        DateOfBirth: { control: 'dateOfBirth', label: 'Data de nascimento' },
+        Gender: { control: 'gender', label: 'Gênero' },
+        Cpf: { control: 'cpf', label: 'CPF' },
+        Rg: { control: 'rg', label: 'RG' },
+        UfRg: { control: 'ufRg', label: 'UF do RG' },
+        Email: { control: 'email', label: 'E-mail' },
+        MobilePhone: { control: 'mobilePhone', label: 'Celular' },
+        LandlinePhone: { control: 'landlinePhone', label: 'Telefone fixo' },
+        HealthPlanId: { control: 'healthPlanId', label: 'Convênio' },
+        HealthPlanCardNumber: { control: 'healthPlanCardNumber', label: 'Nº carteirinha' },
+        HealthPlanCardExpirationMonth: {
+          control: 'healthPlanCardExpirationMonth',
+          label: 'Mês de validade'
+        },
+        HealthPlanCardExpirationYear: {
+          control: 'healthPlanCardExpirationYear',
+          label: 'Ano de validade'
         }
+      };
 
-        if (msgs.length) {
-          this.validationErrors = msgs; // 👈 vai aparecer no alerta amarelo
+      const messages: string[] = [];
+
+      // 1) Cenário típico de validação: ProblemDetails com "errors"
+      if (problem.errors && typeof problem.errors === 'object') {
+        Object.entries(problem.errors).forEach(([key, value]) => {
+          const textos = Array.isArray(value) ? value as string[] : [String(value)];
+          const map = fieldMap[key] ?? null;
+
+          textos.forEach(m => {
+            messages.push(m);
+
+            // Marca o campo correspondente com erro vindo da API
+            if (map) {
+              const control = this.form.get(map.control);
+              if (control) {
+                const currentErrors = control.errors || {};
+                control.setErrors({ ...currentErrors, api: m });
+                control.markAsTouched();
+              }
+            }
+          });
+        });
+
+        if (messages.length) {
+          // Vai aparecer no alerta amarelo "Revise os campos abaixo"
+          this.validationErrors = messages;
           return;
         }
       }
 
-      // Fallback: usa o título do ProblemDetails, se existir
-      if (problem.title) {
-        this.error = problem.title; // 👈 vai aparecer no alerta vermelho
-        return;
-      }
-
-      // Último fallback
-      this.error = 'Erro ao salvar paciente. Verifique os dados informados.';
-    }
-
-  private handleApiErrorXXX(err: any): void {
-      console.error('Erro ao salvar paciente', err);
-      console.error('Erro detalhado da API:', err?.error);
-
-      this.loading = false;
-      this.validationErrors = [];
-      this.error = undefined;
-
-      const problem = err?.error;
-      if (!problem) {
-        this.error = 'Erro ao salvar paciente. Tente novamente.';
-        return;
-      }
-
-      // Mostra o título (ex: "One or more validation errors occurred.")
-      if (problem.title) {
+      // 2) DomainException / outros erros sem "errors"
+      // (ex: "Convênio informado não existe.", "Já existe um paciente cadastrado com este CPF.")
+      if (problem.title && problem.title !== 'One or more validation errors occurred.') {
         this.error = problem.title;
-      }
-
-      if (problem.errors && typeof problem.errors === 'object') {
-        const msgs: string[] = [];
-
-        for (const key of Object.keys(problem.errors)) {
-          const value = problem.errors[key];
-          const textos = Array.isArray(value) ? value : [value];
-
-          textos.forEach((m: string) => {
-            // 🔹 Campos com mensagem “amigável” opcional
-            if (key === 'HealthPlanId') {
-              msgs.push('Convênio é obrigatório.');
-              this.form.get('healthPlanId')?.setErrors({ api: true });
-            } else if (key === 'HealthPlanCardNumber') {
-              msgs.push('Nº carteirinha é obrigatório.');
-              this.form.get('healthPlanCardNumber')?.setErrors({ api: true });
-            } else {
-              // 🔹 Qualquer outro campo usa a mensagem que veio da API
-              // aqui entra "Ano de validade não pode ser menor que o ano atual."
-              msgs.push(m);
-            }
-          });
-        }
-
-        this.validationErrors = msgs;
         return;
       }
 
-      // fallback se não houver "errors"
-      if (!this.error) {
-        this.error = 'Erro ao salvar paciente. Verifique os dados informados.';
+      if (problem.detail) {
+        this.error = problem.detail;
+        return;
       }
-    }
 
+      if (typeof problem === 'string') {
+        this.error = problem;
+        return;
+      }
+
+      // Fallback final
+      this.error = 'Erro ao salvar paciente. Verifique os dados informados.';
+  }
 
   cancel(): void {
     this.router.navigate(['/pacientes']);
