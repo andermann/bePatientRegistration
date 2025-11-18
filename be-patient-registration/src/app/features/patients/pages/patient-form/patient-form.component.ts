@@ -144,7 +144,7 @@ export class PatientFormComponent implements OnInit {
 
   submit(): void {
     if (this.form.invalid) {
-      console.log('ank deu ruim - form inválido');
+      console.log('form inválido');
 
       // Força os campos a ficarem "touched" para aparecerem os erros individuais
       this.form.markAllAsTouched();
@@ -159,7 +159,6 @@ export class PatientFormComponent implements OnInit {
     }
 
     const raw = this.form.getRawValue();
-    console.log('ANK raw', raw);
 
     // Normaliza campos com máscara (remove pontos, traços, parênteses etc.)
     const onlyDigits = (value?: string | null) =>
@@ -190,40 +189,24 @@ export class PatientFormComponent implements OnInit {
     this.loading = true;
 
     if (this.isEditMode && this.id) {
-      // const request: UpdatePatientRequest = {
-      //   ...baseRequest,
-      //   isActive: raw.isActive!
-      // };
       const request: UpdatePatientRequest = baseRequest;
 
       this.patientsService.update(this.id, request).subscribe({
         next: () => this.router.navigate(['/pacientes']),
-        // error: (err) => {
-        //   console.error('Erro ao atualizar paciente', err);
-        //   this.error = 'Erro ao salvar paciente.';
-        //   this.loading = false;
-        // }
         error: (err) => {
           console.error('Erro detalhado da API:', err.error); 
           this.error = 'Erro ao salvar paciente.';
-          this.error = this.extrairMensagemErro(err);
+          // this.error = this.extrairMensagemErro(err);
           this.handleApiError(err)
         }
       });
     } else {
       this.patientsService.create(baseRequest).subscribe({
         next: () => this.router.navigate(['/pacientes']),
-        // error: (err) => {
-        //   console.error('Erro ao salvar paciente', err);
-        //   console.error('Erro detalhado da API:', err.error); 
-        //   this.error = 'Erro ao salvar paciente.';
-        //   this.error = this.extrairMensagemErro(err);
-        //   this.loading = false;
-        // }
         error: (err) => {
           console.error('Erro detalhado da API:', err.error); 
           this.error = 'Erro ao salvar paciente.';
-          this.error = this.extrairMensagemErro(err);
+          // this.error = this.extrairMensagemErro(err);
           this.handleApiError(err)
         }
       });
@@ -299,6 +282,22 @@ export class PatientFormComponent implements OnInit {
             `${friendly} não pode ser maior que ${errors['max'].max}.`
           );
         }
+        // if (errors['mask']) {
+        //   // messages.push('Preencha o Celular com a quantidade mínima de digitos.');
+        //   messages.push(
+        //     `${friendly} Preencha o Celular com a quantidade mínima de digitos.`
+        //   );
+        // }
+
+        // Validação de Máscara (ngx-mask)
+        if (errors['mask']) {
+          // Mensagem específica para o Celular como solicitado
+          if (key === 'mobilePhone') {
+            messages.push(`${friendly}: Preencha com a quantidade mínima de dígitos.`);
+          } else {
+            messages.push(`${friendly} está incompleto.`);
+          }
+        }
       }
     });
 
@@ -310,38 +309,29 @@ export class PatientFormComponent implements OnInit {
     if (formErrors['cpf']) {
       messages.push(formErrors['cpf']);
     }
-
-    this.validationErrors = messages;
+    if (formErrors['mobilePhone']) {
+      messages.push(formErrors['mobilePhone']);
+    }
+    if (messages.length) {
+      // Vai aparecer no alerta amarelo "Revise os campos abaixo"
+      this.validationErrors = messages;
+      // return;
+    }
   }
 
   private logInvalidControls(): void {
     console.group('Campos inválidos do formulário de paciente');
-    this.validationErrors = [];
-    this.error = undefined;
-    const messages: string[] = [];
+    // const messages: string[] = [];
 
     Object.entries(this.form.controls).forEach(([key, value]) => {
       if (value.invalid) {
-        const textos = Array.isArray(value) ? value as string[] : [String(value)];
-        //const map = fieldMap[key] ?? null;
-        console.log('textos', textos);
+        // const textos = Array.isArray(value) ? value as string[] : [String(value)];
         console.log(key, value.errors);
-        if(key === 'mobilePhone'){
-          messages.push('Preencha o Celular com a quantidade mínima de digitos.');
-        }else{
-          //messages.push(key);
-        }
-
       }
     });
     console.log('Erros do form (nível grupo):', this.form.errors);
-    console.groupEnd();
+    // console.groupEnd();
     
-    if (messages.length) {
-      // Vai aparecer no alerta amarelo "Revise os campos abaixo"
-      this.validationErrors = messages;
-      return;
-    }
   }
 
   

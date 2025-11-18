@@ -12,7 +12,7 @@ using bePatientRegistration.Infrastructure.Persistence;
 namespace bePatientRegistration.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251115222438_InitialCreate")]
+    [Migration("20251118140915_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
