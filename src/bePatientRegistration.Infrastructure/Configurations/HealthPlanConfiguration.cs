@@ -1,6 +1,7 @@
 ﻿using bePatientRegistration.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace bePatientRegistration.Infrastructure.Persistence.Configurations
 {
