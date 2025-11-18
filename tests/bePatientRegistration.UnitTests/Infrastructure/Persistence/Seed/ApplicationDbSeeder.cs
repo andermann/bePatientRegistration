@@ -1,20 +1,17 @@
 ﻿using bePatientRegistration.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace bePatientRegistration.Infrastructure.Persistence.Seed
 {
     public static class ApplicationDbSeeder
     {
-        [ExcludeFromCodeCoverage]
         public static void Seed(ApplicationDbContext context)
         {
-            // Garante que o banco está criado e com as migrações aplicadas
-            context.Database.Migrate();
+            // Garante que o banco e o schema existem para o provider atual
+            // (InMemory, SQL Server, SQLite, etc.) SEM usar migrations.
+            context.Database.EnsureCreated();
 
-            // Se já existirem convênios cadastrados, não faz nada
+            // Se já houver convênios, não faz nada (idempotente)
             if (context.HealthPlans.Any())
                 return;
 

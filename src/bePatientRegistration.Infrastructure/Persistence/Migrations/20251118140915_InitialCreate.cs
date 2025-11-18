@@ -1,5 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
@@ -8,6 +9,7 @@ namespace bePatientRegistration.Infrastructure.Persistence.Migrations
     /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+        [ExcludeFromCodeCoverage]
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -64,6 +66,7 @@ namespace bePatientRegistration.Infrastructure.Persistence.Migrations
                 column: "HealthPlanId");
         }
 
+        [ExcludeFromCodeCoverage]
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {

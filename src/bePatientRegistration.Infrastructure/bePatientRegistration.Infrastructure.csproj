@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="Persistence\Migrations\20251118180721_UpdateModel.cs" />
+    <Compile Remove="Persistence\Migrations\20251118180721_UpdateModel.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\bePatientRegistration.Application\bePatientRegistration.Application.csproj" />
     <ProjectReference Include="..\bePatientRegistration.Domain\bePatientRegistration.Domain.csproj" />
   </ItemGroup>
@@ -17,10 +22,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
   <PropertyGroup>

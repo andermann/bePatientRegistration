@@ -2,6 +2,7 @@
 using bePatientRegistration.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace bePatientRegistration.Infrastructure.Persistence.Configurations
 {
