@@ -45,7 +45,9 @@ namespace bePatientRegistration.Infrastructure.Repositories
 
         public Task DeleteAsync(Patient patient, CancellationToken cancellationToken = default)
         {
-            _context.Patients.Remove(patient);
+            //_context.Patients.Remove(patient);
+            patient.Deactivate();
+            _context.Patients.Update(patient);
             return Task.CompletedTask;
         }
 
