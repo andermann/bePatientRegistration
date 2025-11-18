@@ -75,10 +75,12 @@ namespace bePatientRegistration.Application.Patients.Dtos
 
         [Range(2024, 2100)]
         public int HealthPlanCardExpirationYear { get; set; }
+
+        public bool IsActive { get; set; }
     }
 
     public class UpdatePatientRequest : CreatePatientRequest
     {
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } 
     }
 }

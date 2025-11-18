@@ -1,120 +1,65 @@
-<!-- # BePatientRegistration
+<!-- # be-patient-registration (Frontend Angular 17)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
+Frontend em Angular 17 para o **Desafio Técnico – Cadastro de Pacientes** da BE3.
 
-## Development server
+## Tecnologias
 
-To start a local development server, run:
+- Angular 17
+- TypeScript
+- Bootstrap 5 + Bootstrap Icons
+- ngx-mask
+- RxJS
+- API .NET Core (projeto `bePatientRegistration.Api`)
 
-```bash
-ng serve
-```
+## Requisitos
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Node.js 18+
+- Angular CLI 17+
+- Backend `.NET` rodando (ex.: https://localhost:5001)
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Instalação
 
 ```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page. -->
+git clone https://github.com/seu-usuario/be-patient-registration.git
+cd be-patient-registration
+npm install
 
 
-# BePatientRegistration
+## Bibliotecas
+npm install bootstrap@5 bootstrap-icons
+npm install ngx-mask -->
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
 
-## Development server
+# be-patient-registration (Frontend Angular 17)
 
-To start a local development server, run:
+Frontend em Angular 17 para o **Desafio Técnico – Cadastro de Pacientes** da BE3.
+
+## Tecnologias
+
+- Angular 17
+- TypeScript
+- Bootstrap 5 + Bootstrap Icons
+- ngx-mask
+- RxJS
+- API .NET Core (projeto `bePatientRegistration.Api`)
+
+## Requisitos
+
+- Node.js 18+
+- Angular CLI 17+
+- Backend `.NET` rodando (ex.: https://localhost:5001)
+
+## Instalação
 
 ```bash
-ng serve
-```
+git clone https://github.com/seu-usuario/be-patient-registration.git
+cd be-patient-registration
+npm install
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## Code scaffolding
+## Instalação das bibliotecas extras
+npm install bootstrap@5 bootstrap-icons
+npm install ngx-mask
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page. -->

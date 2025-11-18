@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">
+    {{ isEditMode ? 'Editar Convênio' : 'Novo Convênio' }}
+  </h1>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">
+  {{ error }}
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <div class="mb-3">
+        <label class="form-label form-required">Nome do convênio</label>
+        <input type="text" class="form-control" formControlName="name" />
+        <div class="form-error" *ngIf="f.name.touched && f.name.invalid">
+          Informe o nome (máx. 200 caracteres).
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select class="form-select" formControlName="isActive">
+          <option [ngValue]="true">Ativo</option>
+          <option [ngValue]="false">Inativo</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      {{ isEditMode ? 'Salvar' : 'Cadastrar' }}
+    </button>
+  </div>
+</form>

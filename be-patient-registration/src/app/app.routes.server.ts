@@ -1,4 +1,8 @@
-// // src/app/app.routes.server.ts
-// import { routes } from './app.routes';
+import { RenderMode, ServerRoute } from '@angular/ssr';
 
-// export const serverRoutes = routes;
+export const serverRoutes: ServerRoute[] = [
+  {
+    path: '**',
+    renderMode: RenderMode.Prerender
+  }
+];

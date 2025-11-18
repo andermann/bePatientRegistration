@@ -53,14 +53,6 @@ namespace bePatientRegistration.Domain.Entities
         {
             Id = Guid.NewGuid();
 
-            //// regra simples: não permitir CPF duplicado
-            //if (!string.IsNullOrWhiteSpace(cpf))
-            //{
-            //    var normalizedCpf = cpf.Normalize(cpf);
-            //    if (ExistsByCpfAsync(normalizedCpf))
-            //        throw new DomainException("Já existe um paciente cadastrado com este CPF.");
-            //}
-
             SetName(firstName, lastName);
             SetDateOfBirth(dateOfBirth);
             Gender = gender;
@@ -156,7 +148,8 @@ namespace bePatientRegistration.Domain.Entities
             Guid healthPlanId,
             string healthPlanCardNumber,
             int healthPlanCardExpirationMonth,
-            int healthPlanCardExpirationYear)
+            int healthPlanCardExpirationYear, 
+            bool isActive)
         {
             SetName(firstName, lastName);
             SetDateOfBirth(dateOfBirth);
@@ -181,6 +174,7 @@ namespace bePatientRegistration.Domain.Entities
             SetCardExpiration(healthPlanCardExpirationMonth, healthPlanCardExpirationYear);
 
             UpdatedAt = DateTime.UtcNow;
+            IsActive = isActive;
         }
 
         public void Deactivate()

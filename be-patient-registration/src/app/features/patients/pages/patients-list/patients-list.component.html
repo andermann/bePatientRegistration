@@ -1,0 +1,63 @@
+<!-- src/app/features/patients/pages/patients-list/patients-list.component.html -->
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Pacientes</h1>
+
+  <button class="btn btn-primary" type="button" (click)="newPatient()">
+    + Novo Paciente
+  </button>
+</div>
+
+<!-- Carregando -->
+<div *ngIf="loading" class="d-flex justify-content-center py-4">
+  <div class="spinner-border" role="status" aria-hidden="true"></div>
+</div>
+
+<!-- Erro -->
+<div *ngIf="!loading && error" class="alert alert-danger">
+  {{ error }}
+</div>
+
+<!-- Nenhum paciente -->
+<div *ngIf="!loading && !error && patients.length === 0"
+     class="text-muted py-3">
+  Nenhum paciente cadastrado.
+</div>
+
+<!-- Tabela -->
+<table *ngIf="!loading && !error && patients.length > 0"
+       class="table table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>CPF</th>
+      <th>Celular</th>
+      <th>Status</th>
+      <th class="text-end">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of patients">
+      <td>{{ p.fullName }}</td>
+      <td>{{ p.cpf }}</td>
+      <td>{{ p.mobilePhone }}</td>
+      <td>
+        <span class="badge bg-success-subtle text-success-emphasis px-3">
+          {{ p.isActive == false ? "Inativo": "Ativo"}}
+        </span>
+      </td>
+      <td class="text-end">
+        <button class="btn btn-sm btn-outline-secondary me-1"
+                type="button"
+                (click)="editPatient(p)">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger"
+                type="button"
+                (click)="deletePatient(p)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

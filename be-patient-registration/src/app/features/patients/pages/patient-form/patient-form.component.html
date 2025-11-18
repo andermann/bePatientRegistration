@@ -1,0 +1,193 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">
+    {{ isEditMode ? 'Editar Paciente' : 'Novo Paciente' }}
+  </h1>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">
+  {{ error }}
+</div>
+
+<div *ngIf="validationErrors.length" class="alert alert-warning">
+  <strong>Revise os campos abaixo:</strong>
+  <ul class="mb-0">
+    <li *ngFor="let err of validationErrors">{{ err }}</li>
+  </ul>
+</div>
+
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <!-- Nome -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label form-required">Nome</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="firstName" />
+          <div class="form-error" *ngIf="f.firstName.touched && f.firstName.invalid">
+            Informe o nome (máx. 100 caracteres).
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label form-required">Sobrenome</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="lastName" />
+          <div class="form-error" *ngIf="f.lastName.touched && f.lastName.invalid">
+            Informe o sobrenome (máx. 100 caracteres).
+          </div>
+        </div>
+      </div>
+
+      <!-- Data / Gênero -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label form-required">Data de nascimento</label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="dateOfBirth" />
+          <div class="form-error" *ngIf="f.dateOfBirth.touched && f.dateOfBirth.invalid">
+            <span *ngIf="f.dateOfBirth.errors?.['required']">Informe a data.</span>
+            <span *ngIf="f.dateOfBirth.errors?.['futureDate']">
+              Data de nascimento não pode ser futura.
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label form-required">Gênero</label>
+          <select class="form-select" formControlName="gender">
+            <option *ngFor="let g of genders" [ngValue]="g.value">{{ g.label }}</option>
+          </select>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">CPF (opcional)</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="cpf"
+            mask="000.000.000-00" />
+          <div class="form-error" *ngIf="form.errors?.['cpf'] && f.cpf.touched">
+            {{ form.errors?.['cpf'] }}
+          </div>
+        </div>
+      </div>
+
+      <!-- RG / UF -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label form-required">RG</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="rg" />
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label form-required">UF do RG</label>
+          <select class="form-select" formControlName="ufRg">
+            <option [ngValue]="0">Selecione</option>
+            <option *ngFor="let uf of ufs" [ngValue]="uf.id">{{ uf.code }}</option>
+          </select>
+          <div class="form-error" *ngIf="f.ufRg.touched && f.ufRg.invalid">
+            Selecione a UF do RG.
+          </div>
+        </div>
+      </div>
+
+      <!-- Contato -->
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label form-required">E-mail</label>
+          <input
+            type="email"
+            class="form-control"
+            formControlName="email" />
+          <div class="form-error" *ngIf="f.email.touched && f.email.invalid">
+            Informe um e-mail válido.
+          </div>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label form-required">Celular</label>
+          <input
+            type="tel"
+            class="form-control"
+            formControlName="mobilePhone"
+            mask="(00) 00000-0000" />
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Telefone fixo</label>
+          <input
+            type="tel"
+            class="form-control"
+            formControlName="landlinePhone"
+            mask="(00) 0000-0000" />
+        </div>
+      </div>
+
+      <div class="form-error" *ngIf="groupErrors?.['phoneRequired']">
+        {{ groupErrors?.['phoneRequired'] }}
+      </div>
+
+      <!-- Convênio -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label form-required">Convênio</label>
+          <select class="form-select" formControlName="healthPlanId">
+            <option value="">Selecione...</option>
+            <option *ngFor="let plan of healthPlans" [value]="plan.id">
+              {{ plan.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label form-required">Nº carteirinha</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="healthPlanCardNumber" />
+        </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label form-required">Validade (mês/ano)</label>
+          <div class="d-flex gap-2">
+            <input
+              type="number"
+              class="form-control"
+              formControlName="healthPlanCardExpirationMonth"
+              min="1"
+              max="12" />
+            <input
+              type="number"
+              class="form-control"
+              formControlName="healthPlanCardExpirationYear"
+              min="2024"
+              max="2100" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Status (edição) -->
+      <div class="row" *ngIf="isEditMode">
+        <div class="col-md-3 mb-3">
+          <label class="form-label">Status</label>
+          <select class="form-select" formControlName="isActive">
+            <option [ngValue]="true">Ativo</option>
+            <option [ngValue]="false">Inativo</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+      Cancelar
+    </button>
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      {{ isEditMode ? 'Salvar' : 'Cadastrar' }}
+    </button>
+  </div>
+</form>

@@ -99,7 +99,8 @@ namespace bePatientRegistration.Application.Patients.ServicesImpl
                 healthPlanId: request.HealthPlanId,
                 healthPlanCardNumber: request.HealthPlanCardNumber,
                 healthPlanCardExpirationMonth: request.HealthPlanCardExpirationMonth,
-                healthPlanCardExpirationYear: request.HealthPlanCardExpirationYear
+                healthPlanCardExpirationYear: request.HealthPlanCardExpirationYear, 
+                isActive: request.IsActive
             );
 
             if (!request.IsActive && existing.IsActive)

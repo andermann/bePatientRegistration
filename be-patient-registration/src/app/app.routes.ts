@@ -1,75 +1,22 @@
-// // // // src/app/app.routes.ts
-// // // import { Routes } from '@angular/router';
-
-// // // export const routes: Routes = [
-// // //   {
-// // //     path: '',
-// // //     loadChildren: () =>
-// // //       import('./pages/patients/patients-module').then(m => m.PatientsModule)
-// // //   },
-// // //   { path: '**', redirectTo: '' }
-// // // ];
-
-// // // src/app/app.routes.ts
-// // import { Routes } from '@angular/router';
-
-// // export const routes: Routes = [
-//   // {
-//     // path: '',
-//     // redirectTo: 'patients',
-//     // pathMatch: 'full'
-//   // },
-//   // {
-//     // path: 'patients',
-//     // loadChildren: () =>
-//       // import('./pages/patients/patients-module').then(m => m.PatientsModule),
-//   // },
-// // //   {
-// // //     path: 'health-plans',
-// // //     loadChildren: () =>
-// // //       import('./pages/health-plans/health-plans-module').then(m => m.HealthPlansModule),
-// // //   },
-//   // { path: '**', redirectTo: 'patients' }
-// // ];
-
-// import { Routes } from '@angular/router';
-// import { HealthPlansListComponent } from './pages/health-plans/health-plans-list.component';
-
-// export const routes: Routes = [
-//   {
-//     path: '',
-//     loadChildren: () =>
-//       import('./pages/home/home-module').then(m => m.HomeModule),
-//   },
-//   {
-//     path: 'patients',
-//     loadChildren: () =>
-//       import('./pages/patients/patients-module').then(m => m.PatientsModule),
-//   },
-//   // {
-//   //   path: 'health-plans',
-//   //   loadChildren: () =>
-//   //     import('./pages/health-plans/health-plans-module').then(m => m.HealthPlansModule),
-//   // },
-//   { path: 'health-plans', component: HealthPlansListComponent },
-
-//   { path: '**', redirectTo: '' },
-// ];
-
 import { Routes } from '@angular/router';
-
-import { PatientListComponent } from './pages/patients/patient-list/patient-list.component';
-import { PatientFormComponent } from './pages/patients/patient-form/patient-form.component';
-
-import { HealthPlansListComponent } from './pages/health-plans/health-plans-list.component';
+import { HomeComponent } from './pages/home/home.component';
+import { PatientsListComponent } from './features/patients/pages/patients-list/patients-list.component';
+import { PatientFormComponent } from './features/patients/pages/patient-form/patient-form.component';
+import { HealthPlansListComponent } from './features/health-plans/pages/health-plans-list/health-plans-list.component';
+import { HealthPlanFormComponent } from './features/health-plans/pages/health-plan-form/health-plan-form.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'patients', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  { path: 'patients', component: PatientListComponent },
-  { path: 'patients/new', component: PatientFormComponent },
-  { path: 'patients/:id', component: PatientFormComponent },
+  { path: 'home', component: HomeComponent },
 
-  { path: 'health-plans', component: HealthPlansListComponent },
-  
+  { path: 'pacientes', component: PatientsListComponent },
+  { path: 'pacientes/novo', component: PatientFormComponent },
+  { path: 'pacientes/:id', component: PatientFormComponent },
+
+  { path: 'convenios', component: HealthPlansListComponent },
+  { path: 'convenios/novo', component: HealthPlanFormComponent },
+  { path: 'convenios/:id', component: HealthPlanFormComponent },
+
+  { path: '**', redirectTo: 'home' }
 ];

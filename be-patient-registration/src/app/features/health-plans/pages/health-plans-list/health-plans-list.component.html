@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Convênios</h1>
+  <button class="btn btn-primary" (click)="newPlan()">
+    <i class="bi bi-plus-lg me-1"></i> Novo Convênio
+  </button>
+</div>
+
+<div *ngIf="error" class="alert alert-danger">
+  {{ error }}
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <div *ngIf="loading" class="p-4 text-center">
+      <div class="spinner-border" role="status"></div>
+    </div>
+
+    <div *ngIf="!loading && healthPlans.length === 0" class="p-4 text-center text-muted">
+      Nenhum convênio cadastrado.
+    </div>
+
+    <div *ngIf="!loading && healthPlans.length > 0" class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Nome</th>
+            <th>Status</th>
+            <th class="text-end">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let plan of healthPlans">
+            <td>{{ plan.name }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="plan.isActive ? 'active' : 'inactive'">
+                {{ plan.isActive ? 'Ativo' : 'Inativo' }}
+              </span>
+            </td>
+            <td class="text-end table-actions">
+              <button
+                class="btn btn-sm btn-outline-secondary me-2"
+                (click)="editPlan(plan)">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="deletePlan(plan)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
