@@ -1,4 +1,4 @@
-﻿# bePatientRegistration.UnitTests – Domain & Infrastructure
+﻿# bePatientRegistration.UnitTests – Application & Domain & Infrastructure
 
 ## Objetivo
 
@@ -58,7 +58,7 @@ bePatientRegistration.sln
     └── bePatientRegistration.IntegrationTests/
 ```
 
-# bePatientRegistration.UnitTests – Domain, Infrastructure & Application
+# bePatientRegistration.UnitTests – Application & Domain & Infrastructure
 
 ## Objetivo
 
@@ -108,4 +108,12 @@ dotnet add package Microsoft.EntityFrameworkCore --version 9.0.5
 dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 9.0.5
 dotnet add package coverlet.collector --version 6.0.2
 ``` 
+---
+
+### Resultado da cobertura de testes
+![Img 638990987541312510](img_638990987541312510.png)
+
+### Detalhes da cobertura por projeto
+![Img 638990987842809788](img_638990987842809788.png)
+
 ---
