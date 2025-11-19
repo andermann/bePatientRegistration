@@ -4,6 +4,7 @@
 
 Garantir **cobertura de testes ≥ 85%** nos projetos:
 
+- `bePatientRegistration.Application`
 - `bePatientRegistration.Domain`
 - `bePatientRegistration.Infrastructure`
 
@@ -23,12 +24,23 @@ Os testes são escritos com **xUnit** seguindo o padrão **AAA (Arrange, Act, As
 ```text
 bePatientRegistration.sln
 ├── src/
+│   ├── bePatientRegistration.Application/
 │   ├── bePatientRegistration.Domain/
 │   ├── bePatientRegistration.Infrastructure/
 │   └── ...
 └── tests/
     ├── bePatientRegistration.UnitTests/
     │   ├── bePatientRegistration.UnitTests.csproj
+    │   ├── Application/
+    │   │   ├── HealthPlans/
+    │   │   │   └── Services/
+    │   │   │       └── HealthPlanAppServiceTests.cs
+    │   │   └── Patients/
+    │   │       ├── Services/
+│   │   │       │       └── PatientAppServiceTests
+    │   │       └── Patients/
+    │   │           ├── CreatePatientRequestValidatorTests.cs
+    │   │           └── UpdatePatientRequestValidatorTests.cs
     │   ├── Domain/
     │   │   ├── Entities/
     │   │   │   ├── HealthPlanTests.cs
@@ -95,8 +107,5 @@ dotnet add package Moq --version 4.20.72
 dotnet add package Microsoft.EntityFrameworkCore --version 9.0.5
 dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 9.0.5
 dotnet add package coverlet.collector --version 6.0.2
-
-# opcional:
-# dotnet add package Microsoft.Data.Sqlite --version 9.0.0
 ``` 
 ---
