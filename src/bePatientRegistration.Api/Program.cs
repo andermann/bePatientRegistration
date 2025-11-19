@@ -13,6 +13,9 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// >>> NOVO: flag de ambiente de teste de integração
+var isIntegrationTests = builder.Environment.IsEnvironment("IntegrationTests");
+
 // CORS para o Angular
 builder.Services.AddCors(options =>
 {
@@ -25,16 +28,11 @@ builder.Services.AddCors(options =>
         });
 });
 
-// ... resto dos services (AddControllers, AddDbContext, etc)
-
-
-
 // 1) Controllers
 builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreatePatientRequestValidator>();
-
 
 // 2) Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -48,11 +46,15 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// 3) DbContext (se o Docker não estiver ok, temporariamente pode trocar para InMemory)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// 3) DbContext
+// Só registra SQL Server se NÃO estiver em IntegrationTests
+if (!isIntegrationTests)
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
 
 // 4) Application Services
 builder.Services.AddScoped<IPatientAppService, PatientAppService>();
@@ -64,8 +66,10 @@ builder.Services.AddScoped<IHealthPlanRepository, HealthPlanRepository>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+// Seed do banco só fora de IntegrationTests
+if (!app.Environment.IsEnvironment("IntegrationTests"))
 {
+    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     ApplicationDbSeeder.Seed(dbContext);
 }
@@ -90,4 +94,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Necessário para WebApplicationFactory<Program>
+public partial class Program { }
+
 
