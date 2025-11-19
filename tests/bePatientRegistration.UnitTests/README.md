@@ -111,9 +111,9 @@ dotnet add package coverlet.collector --version 6.0.2
 ---
 
 ### Resultado da cobertura de testes
-![Img 638990987541312510](img_638990987541312510.png)
+![Img 638990988884161872](img_638990988884161872.png)
 
 ### Detalhes da cobertura por projeto
-![Img 638990987842809788](img_638990987842809788.png)
+![Img 638990989043205684](img_638990989043205684.png)
 
 ---
