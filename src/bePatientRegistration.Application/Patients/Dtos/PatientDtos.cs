@@ -81,6 +81,6 @@ namespace bePatientRegistration.Application.Patients.Dtos
 
     public class UpdatePatientRequest : CreatePatientRequest
     {
-        public bool IsActive { get; set; } 
+        //public bool IsActive { get; set; }
     }
 }

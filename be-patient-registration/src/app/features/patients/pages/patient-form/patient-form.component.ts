@@ -131,7 +131,7 @@ export class PatientFormComponent implements OnInit {
           healthPlanCardNumber: patient.healthPlanCardNumber,
           healthPlanCardExpirationMonth: patient.healthPlanCardExpirationMonth,
           healthPlanCardExpirationYear: patient.healthPlanCardExpirationYear,
-          isActive: patient.isActive ?? true
+          isActive: patient.isActive
         });
         this.loading = false;
       },
@@ -182,7 +182,7 @@ export class PatientFormComponent implements OnInit {
       healthPlanCardExpirationMonth: raw.healthPlanCardExpirationMonth!,
       healthPlanCardExpirationYear: raw.healthPlanCardExpirationYear!
       // isActive: this.isEditMode ? raw.isActive : true
-      , isActive: raw.isActive ? raw.isActive : true
+      , isActive: raw.isActive
     };
 
     this.error = undefined;
